@@ -3,9 +3,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Main;
 use Illuminate\Http\Request;
+use App\Traits\ApiResponser;
 //use App\User;
 
 Class MainController extends Controller {
+use ApiResponser;
  private $request;
 
  public function __construct(Request $request){
@@ -21,6 +23,8 @@ Class MainController extends Controller {
 
 public function index()
 {
+    $users = User ::all();
+    return $this->successResponse($users);
   $message = 'Welcome to database';
   return $message;
 }
@@ -34,8 +38,8 @@ public function addUser(Request $request ){
 
     $this->validate($request, $rules);
     $user = Main::create($request->all());
-
-    return response($user, 201);
+    return $this->successResponse($user, Response::HTTP_CREATED);
+    //return response($user, 201);
 }
 
     public function show($id)
