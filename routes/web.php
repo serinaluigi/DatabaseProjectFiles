@@ -13,13 +13,12 @@
 |
 */
 
-Route::get('/users', 'MainController@getUsers');
+Route::get('/users', 'UserController@getUsers');
 //index
-Route::get('/', 'MainController@index');   
-Route::post('/', 'MainController@addUser');  
-Route::get('/login', 'LoginController@login'); 
-Route::get('/test', 'LoginController@result');
-Route::get('/{id}', 'MainController@show'); 
-Route::put('/{id}', 'MainController@update'); 
-Route::patch('/{id}', 'MainController@update'); 
-Route::delete('/{id}', 'MainController@delete'); 
+Route::get('/', 'UserController@index');
+Route::post('/', 'UserController@addUser');
+Route::get('/login', 'UserController@login');
+Route::get('/test', 'UserController@result');
+Route::get('/{id}', 'UserController@show');
+Route::put('/users1/put/{id}', 'UserController@update');
+Route::delete('/users1/delete/{id}', 'UserController@delete');

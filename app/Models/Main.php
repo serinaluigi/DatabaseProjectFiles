@@ -8,12 +8,15 @@
     class Main extends Model{
 
         protected $table = 'tbluser';
-        
+
         protected $fillable = [
             'username', 'password'
         ];
 
         public $timestamps = false;
+        //protected $primaryKey = 'userid';
+        protected $hidden = [
+            'password',
+        ];
 
-
-}
+    }
