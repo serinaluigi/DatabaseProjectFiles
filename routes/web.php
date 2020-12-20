@@ -22,3 +22,8 @@ Route::get('/test', 'UserController@result');
 Route::get('/{id}', 'UserController@show');
 Route::put('/users1/put/{id}', 'UserController@update');
 Route::delete('/users1/delete/{id}', 'UserController@delete');
+
+Route::get('/usersjob','UserJobController@index');
+Route::get('/userjob/{id}','UserJobController@show'); // get user by id
+Route::get('user/','UserJobController@add');
+Route::get('/user/{id}','UserJobController@update');

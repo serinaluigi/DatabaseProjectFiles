@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Main;
 use App\Models\User;
+use App\Models\UserJob; 
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -42,6 +43,7 @@ class UserController extends Controller
         $rules = [
             'username' => 'required|max:50',
             'password' => 'required|max:20',
+            'jid' => 'required|numeric|min:1|not_in:0',
 
         ];
 
@@ -50,8 +52,9 @@ class UserController extends Controller
         } catch (ValidationException $e) {
         }
 
-        $user = DB::insert('insert into tbluser (username, password) values (?, ?)',
-            [$request->input("username"), $request->input("password")]);
+        $user = DB::insert('insert into tbluser (username, password, jid) values (?, ?, ?)',
+            [$request->input("username"), $request->input("password"), $request->input("jid")]);
+        $userjob = UserJob::findOrFail($request->jid);
 
         return $this->successResponse($user, Response::HTTP_CREATED);
     }
@@ -69,12 +72,14 @@ class UserController extends Controller
         $rules = [
             'username' => 'required|max:50',
             'password' => 'required|max:20',
+            'jid' => 'required|numeric|min:1|not_in:0',
         ];
         $this->validate($request, $rules);
         $username = $request->input('username');
         $password = $request->input('password');
-        $user = DB::update("UPDATE `tbluser` SET `username` = ?, `password` = ? WHERE `tbluser`.`id` = ?"
-            ,[$username,$password,$id]);
+        $jid = $request->input('jid');
+        $user = DB::update("UPDATE `tbluser` SET `username` = ?, `password` = ?,`jid` = ? WHERE `tbluser`.`id` = ?"
+            ,[$username,$password,$jid,$id]);
         return $this->successResponse($user, Response::HTTP_CREATED);
     }
 
