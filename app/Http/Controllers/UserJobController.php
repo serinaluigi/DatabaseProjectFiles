@@ -39,7 +39,7 @@ Class UserJobController extends Controller {
  public function add(Request $request){
    $rules = [
    'jobname' => 'required|max:20',
-   'jid' => 'required|numeric|min:1|not_in:0',
+   'jid' => 'numeric|min:1|not_in:0',
    ];
    $this->validate($request,$rules);
    $userjob =UserJob::findOrFail($request->jobid);
@@ -52,22 +52,18 @@ Class UserJobController extends Controller {
 public function update(Request $request,$id){
    $rules = [
              'jobname' => 'max:20',
-              'jid' => 'required|numeric|min:1|not_in:0',
+              'jid' => 'numeric|min:1|not_in:0',
             ];
             $this->validate($request, $rules);
             $userjob = UserJob::findOrFail($request->jobid);
             $user = User::findOrFail($id);
             $user->fill($request->all());
-
             if ($user->isClean()) {
                return $this->errorResponse('No values changed',
                Response::HTTP_UNPROCESSABLE_ENTITY);
                }
                $user->save();
                return $this->successResponse($user);
-               
-               
-
 
 }
 

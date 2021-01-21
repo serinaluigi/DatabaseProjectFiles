@@ -3,13 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Main;
-use App\Models\User;
-use App\Models\UserJob; 
+use App\Model\User;
+use App\Models\UserJob;
 use App\Traits\ApiResponser;
+use Illuminate\Http\Response;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+//use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
-use Symfony\Component\HttpFoundation\Response;
+//use Symfony\Component\HttpFoundation\Response;
+use DB;
 
 //use App\User;
 
@@ -54,7 +56,7 @@ class UserController extends Controller
 
         $user = DB::insert('insert into tbluser (username, password, jid) values (?, ?, ?)',
             [$request->input("username"), $request->input("password"), $request->input("jid")]);
-        $userjob = UserJob::findOrFail($request->jid);
+        // $userjob = UserJob::findOrFail($request->jid);
 
         return $this->successResponse($user, Response::HTTP_CREATED);
     }
@@ -70,17 +72,30 @@ class UserController extends Controller
     public function update(Request $request,$id)
     {
         $rules = [
-            'username' => 'required|max:50',
+            'username' => 'required|max:20',
             'password' => 'required|max:20',
             'jid' => 'required|numeric|min:1|not_in:0',
         ];
+
         $this->validate($request, $rules);
-        $username = $request->input('username');
-        $password = $request->input('password');
-        $jid = $request->input('jid');
-        $user = DB::update("UPDATE `tbluser` SET `username` = ?, `password` = ?,`jid` = ? WHERE `tbluser`.`id` = ?"
-            ,[$username,$password,$jid,$id]);
-        return $this->successResponse($user, Response::HTTP_CREATED);
+        // validate if Jobid is found in the table tbluserjob
+        //  $userjob = UserJob::findOrFail($request->jobid);
+        //echo $username;
+
+        $user = User::find($id);
+
+        if($user == null) return $this->errorResponse('No User in the database',404);
+
+        $user->username = $request->username;
+        $user->password = $request->password;
+        $user->jid = $request->jid;
+//        DB::table('tbluser')
+//            ->where('id', $id)
+//            ->update(['username' => $username, 'password' => $password, 'jid' =>$jid]);
+
+        $user->save();
+
+        return $this->successResponse($user);
     }
 
     public function delete($id)
@@ -89,4 +104,5 @@ class UserController extends Controller
 
         return $this->successResponse($user, Response::HTTP_CREATED);
     }
+
 }
